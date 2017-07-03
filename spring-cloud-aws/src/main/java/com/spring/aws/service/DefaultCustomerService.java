@@ -31,6 +31,6 @@ public class DefaultCustomerService implements CustomerService {
 
 	@Override
 	public void registerCustomer(CustomerVO newCustomer) {
-		
+		s3FileService.saveFileToS3(null);
 	}
 }
