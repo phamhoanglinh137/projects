@@ -17,4 +17,4 @@ aws:
     identifier: spring-aws-rds-sp1
     password: Qwerty12345
   s3: 
-    bucket-name: spring_aws_s3_sp1
+    bucket-name: spring-aws-s3-sp1/spring-aws

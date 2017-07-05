@@ -1,6 +1,7 @@
 package com.spring.aws.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +31,7 @@ public class AwsController {
 	private CustomerService customerService;
 	
 	@RequestMapping(value="/customer/{firstName}", method = RequestMethod.GET)
-	public CustomerVO getCustomerByFirstName(@PathVariable("firstName") String firstName) {
+	public List<CustomerVO> getCustomerByFirstName(@PathVariable("firstName") String firstName) {
 		log.info("get Customer by FirstName {}", firstName);
 		return customerService.findCustomerByFirstName(firstName);
 	}
@@ -45,8 +46,11 @@ public class AwsController {
             @RequestParam(value="county", required=true) String county,
             @RequestParam(value="postcode", required=true) String postcode,
             @RequestParam(value="image", required=true) MultipartFile image) {
-		
-		customerService.registerCustomer(null);
-		return null;
+		log.info("create Customer start");
+		CustomerVO customerVO = CustomerVO.builder().withFirstName(firstName).withLastName(lastName).withDateOfBirth(dateOfBirth)
+				.withCounty(county).withStreet(street).withTown(town).withPostcode(postcode).withImage(image).build();
+		customerService.registerCustomer(customerVO);
+		log.info("create Customer end");
+		return customerVO;
 	}
 }

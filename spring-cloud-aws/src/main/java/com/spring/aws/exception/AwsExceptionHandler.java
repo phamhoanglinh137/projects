@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class AwsExceptionHandler {
 	
-	@ExceptionHandler(SpringAwsException.class)
+	@ExceptionHandler(AwsCloudException.class)
 	@ResponseStatus(code=HttpStatus.BAD_REQUEST)
 	@ResponseBody
-	public Object handleSpringAwsException(SpringAwsException ex) {
+	public Object handleSpringAwsException(AwsCloudException ex) {
 		return ex;
 	}
 }

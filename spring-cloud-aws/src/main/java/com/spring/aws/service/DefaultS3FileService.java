@@ -17,7 +17,6 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.spring.aws.exception.SpringAwsException;
 import com.spring.aws.repo.entity.CustomerImage;
 
 /**
@@ -41,27 +40,22 @@ public class DefaultS3FileService implements S3FileService {
 	 * @return
 	 * @throws IOException
 	 */
-	public CustomerImage saveFileToS3(MultipartFile multipartFile) throws SpringAwsException {
+	public CustomerImage saveFileToS3(MultipartFile multipartFile) throws Exception {
 
-		try{
-			File fileToUpload = convertFromMultiPart(multipartFile);
-			String key = Instant.now().getEpochSecond() + "_" + fileToUpload.getName();
+		File fileToUpload = convertFromMultiPart(multipartFile);
+		String key = Instant.now().getEpochSecond() + "_" + fileToUpload.getName();
 
-			/* save file */
-			s3Client.putObject(new PutObjectRequest(S3_BUCKET_NAME, key, fileToUpload));
+		/* save file */
+		s3Client.putObject(new PutObjectRequest(S3_BUCKET_NAME, key, fileToUpload));
 
-			/* get signed URL (valid for one year) */
-			GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(S3_BUCKET_NAME, key);
-			generatePresignedUrlRequest.setMethod(HttpMethod.GET);
-			generatePresignedUrlRequest.setExpiration(DateTime.now().plusYears(1).toDate());
+		/* get signed URL (valid for one year) */
+		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(S3_BUCKET_NAME, key);
+		generatePresignedUrlRequest.setMethod(HttpMethod.GET);
+		generatePresignedUrlRequest.setExpiration(DateTime.now().plusDays(7).toDate());
 
-			URL signedUrl = s3Client.generatePresignedUrl(generatePresignedUrlRequest); 
+		URL signedUrl = s3Client.generatePresignedUrl(generatePresignedUrlRequest); 
 
-			return new CustomerImage(key, signedUrl.toString());
-		}
-		catch(Exception ex){			
-			throw new SpringAwsException("An error occurred saving file to S3", ex);
-		}		
+		return new CustomerImage(key, signedUrl.toString());
 	}
 
 	/**
@@ -69,8 +63,9 @@ public class DefaultS3FileService implements S3FileService {
 	 * 
 	 * @param customerImage
 	 */
-	public void deleteImageFromS3(CustomerImage customerImage){
-		s3Client.deleteObject(new DeleteObjectRequest(S3_BUCKET_NAME, customerImage.getKey()));	
+	@Override
+	public void deleteImageFromS3(String imageKey) {
+		s3Client.deleteObject(new DeleteObjectRequest(S3_BUCKET_NAME, imageKey));	
 	}
 
 	/**
@@ -90,4 +85,5 @@ public class DefaultS3FileService implements S3FileService {
 
 		return file;
 	}
+
 }

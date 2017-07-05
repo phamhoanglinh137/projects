@@ -11,7 +11,6 @@ import com.spring.aws.repo.entity.CustomerImage;
  */
 public interface S3FileService {
 	
-	public CustomerImage saveFileToS3(MultipartFile multipartFile);
-	
-	public void deleteImageFromS3(CustomerImage customerImage);
+   CustomerImage saveFileToS3(MultipartFile multipartFile) throws Exception;
+   void deleteImageFromS3(String imageKey);
 }

@@ -7,22 +7,29 @@ import org.springframework.http.HttpStatus;
  * @author linhpham
  *
  */
-public class SpringAwsException extends RuntimeException {
+public class AwsCloudException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	
-	private final static HttpStatus HTTP_CODE = HttpStatus.BAD_REQUEST;
+	private HttpStatus status = HttpStatus.BAD_REQUEST;
 	
 	private String errorCode;
 	
 	private String errorMsg;
 	
-	public SpringAwsException(String errorCode, Throwable cause) {
+	public AwsCloudException(String errorCode, Throwable cause) {
         super(errorCode, cause);
         this.errorCode = errorCode;
     }
 	
-	public SpringAwsException(String errorCode, String errorMsg) {
+	public AwsCloudException(HttpStatus status, String errorCode, String errorMsg) {
+		super();
+        this.status = status;
+        this.errorCode = errorCode;
+		this.errorMsg = errorMsg;
+    }
+	
+	public AwsCloudException(String errorCode, String errorMsg) {
 		super();
 		this.errorCode = errorCode;
 		this.errorMsg = errorMsg;
@@ -44,8 +51,8 @@ public class SpringAwsException extends RuntimeException {
 		this.errorMsg = errorMsg;
 	}
 
-	public static HttpStatus getHttpCode() {
-		return HTTP_CODE;
+	public HttpStatus getHttpCode() {
+		return status;
 	}
 	
 }
