@@ -2,7 +2,6 @@ package com.spring.aws.config;
 
 import java.util.List;
 
-import org.springframework.cloud.aws.jdbc.config.annotation.EnableRdsInstance;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
