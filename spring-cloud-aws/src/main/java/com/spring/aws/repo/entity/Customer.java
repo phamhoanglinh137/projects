@@ -31,6 +31,12 @@ public class Customer{
 	@Column(nullable = false)
 	private Date dateOfBirth;
 	
+	@Column(nullable = false, length = 11)
+	private String phone;
+	
+	@Column(nullable = false, length = 100)
+	private String email;
+	
 	@OneToOne(cascade = {CascadeType.ALL})
 	private CustomerImage customerImage;
 	
@@ -39,11 +45,13 @@ public class Customer{
 	
 	public Customer(){}
 	
-	public Customer(String firstName, String lastName, Date dateOfBirth, CustomerImage customerImage, Address address) {
+	public Customer(String firstName, String lastName, Date dateOfBirth, String email, String phone, CustomerImage customerImage, Address address) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
+		this.email = email;
+		this.phone = phone;
 		this.customerImage = customerImage;
 		this.address = address;
 	}
@@ -78,6 +86,22 @@ public class Customer{
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+	
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public CustomerImage getCustomerImage() {

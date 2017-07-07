@@ -16,10 +16,8 @@ public class Address{
 
 	public Address(){}
 	
-	public Address(String street, String town, String county, String postCode) {
-		this.street = street;
-		this.town = town;
-		this.county = county;
+	public Address(String address, String postCode) {
+		this.address = address;
 		this.postcode = postCode;
 	}
 
@@ -27,15 +25,9 @@ public class Address{
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
 	
-	@Column(name = "street", nullable = false, length=40)
-	private String street;
+	@Column(name = "address", nullable = false, length=40)
+	private String address;
 	
-	@Column(name = "town", nullable = false, length=40)
-	private String town;
-	
-	@Column(name = "county", nullable = false, length=40)
-	private String county;
-
 	@Column(name = "postcode", nullable = false, length=40)
 	private String postcode;
 
@@ -47,28 +39,12 @@ public class Address{
 		this.id = id;
 	}
 
-	public String getStreet() {
-		return street;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setStreet(String street) {
-		this.street = street;
-	}
-
-	public String getTown() {
-		return town;
-	}
-
-	public void setTown(String town) {
-		this.town = town;
-	}
-
-	public String getCounty() {
-		return county;
-	}
-
-	public void setCounty(String county) {
-		this.county = county;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public String getPostcode() {

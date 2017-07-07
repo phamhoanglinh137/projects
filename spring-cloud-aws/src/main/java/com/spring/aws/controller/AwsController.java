@@ -41,14 +41,14 @@ public class AwsController {
             @RequestParam(value="firstName", required=true) String firstName,
             @RequestParam(value="lastName", required=true) String lastName,
             @RequestParam(value="dateOfBirth", required=true) @DateTimeFormat(pattern="yyyy-MM-dd") Date dateOfBirth,
-            @RequestParam(value="street", required=true) String street,
-            @RequestParam(value="town", required=true) String town,
-            @RequestParam(value="county", required=true) String county,
+            @RequestParam(value="phone", required=true) String phone,
+            @RequestParam(value="email", required=true) String email,
+            @RequestParam(value="address", required=true) String address,
             @RequestParam(value="postcode", required=true) String postcode,
             @RequestParam(value="image", required=true) MultipartFile image) {
 		log.info("create Customer start");
 		CustomerVO customerVO = CustomerVO.builder().withFirstName(firstName).withLastName(lastName).withDateOfBirth(dateOfBirth)
-				.withCounty(county).withStreet(street).withTown(town).withPostcode(postcode).withImage(image).build();
+				.withPhone(phone).withEmail(email).withAddress(address).withPostcode(postcode).withImage(image).build();
 		customerService.registerCustomer(customerVO);
 		log.info("create Customer end");
 		return customerVO;

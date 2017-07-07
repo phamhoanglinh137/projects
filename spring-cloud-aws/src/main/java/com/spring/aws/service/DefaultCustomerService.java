@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.StringUtils;
 import com.spring.aws.exception.AwsCloudException;
+import com.spring.aws.message.SqsQueueSender;
 import com.spring.aws.model.CustomerVO;
 import com.spring.aws.repo.CustomerRepository;
 import com.spring.aws.repo.entity.Address;
@@ -33,14 +34,17 @@ public class DefaultCustomerService implements CustomerService {
 	@Autowired
 	private S3FileService s3FileService;
 	
+	@Autowired
+	private SqsQueueSender sender;
+	
 	@Override
 	public List<CustomerVO> findCustomerByFirstName(String firstName) {
 		List<Customer> customerLs = customerRepository.findByFirstName(firstName);
 		List<CustomerVO> customerVOLs = new ArrayList<CustomerVO>();
 		customerLs.forEach(customer -> {
 			customerVOLs.add(CustomerVO.builder().withFirstName(customer.getFirstName()).withLastName(customer.getLastName()).withDateOfBirth(customer.getDateOfBirth())
-				.withCounty(customer.getAddress().getCounty()).withStreet(customer.getAddress().getStreet()).withTown(customer.getAddress().getTown()).withPostcode(customer.getAddress().getPostcode())
-				.withImageUrl(customer.getCustomerImage().getUrl()).build());
+					.withPhone(customer.getPhone()).withEmail(customer.getEmail()).withAddress(customer.getAddress().getAddress()).withPostcode(customer.getAddress().getPostcode())
+				    .withImageUrl(customer.getCustomerImage().getUrl()).build());
 		});
 		return customerVOLs;
 	}
@@ -61,6 +65,7 @@ public class DefaultCustomerService implements CustomerService {
 			customer.setAddress(address);
 			customerRepository.save(customer);
 			
+			sender.send(customer.getPhone());
 		} catch(Exception ex) {
 			log.error("Exception in register new customer", ex);
 			

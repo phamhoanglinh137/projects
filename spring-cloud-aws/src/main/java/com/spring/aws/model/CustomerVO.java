@@ -6,91 +6,139 @@ import javax.annotation.Generated;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
  * 
  * @author linhpham
  *
  */
 public class CustomerVO {
-	
-	private String firstName; 
+
+	private String firstName;
 	private String lastName;
 	private Date dateOfBirth;
-	private String street;
-	private String town;
-	private String county;
+	private String phone;
+	private String email;
+	private String address;
 	private String postcode;
-	
+
 	private MultipartFile image;
 	private String imageKey;
 	private String imageUrl;
 	private String imageId;
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
 	public String getLastName() {
 		return lastName;
 	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
 	public Date getDateOfBirth() {
 		return dateOfBirth;
 	}
-	public String getStreet() {
-		return street;
+
+	public void setDateOfBirth(Date dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
-	public String getTown() {
-		return town;
+
+	public String getPhone() {
+		return phone;
 	}
-	public String getCounty() {
-		return county;
+
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
 	public String getPostcode() {
 		return postcode;
 	}
-	@JsonProperty("image")
+
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
+
 	public MultipartFile getImage() {
 		return image;
 	}
-	
-	@JsonIgnore
-	public MultipartFile setImage() {
-		return image;
+
+	public void setImage(MultipartFile image) {
+		this.image = image;
 	}
-	
+
 	public String getImageKey() {
 		return imageKey;
 	}
+
+	public void setImageKey(String imageKey) {
+		this.imageKey = imageKey;
+	}
+
 	public String getImageUrl() {
 		return imageUrl;
 	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
 	public String getImageId() {
 		return imageId;
 	}
+
+	public void setImageId(String imageId) {
+		this.imageId = imageId;
+	}
+
 	@Generated("SparkTools")
 	private CustomerVO(Builder builder) {
 		this.firstName = builder.firstName;
 		this.lastName = builder.lastName;
 		this.dateOfBirth = builder.dateOfBirth;
-		this.street = builder.street;
-		this.town = builder.town;
-		this.county = builder.county;
+		this.phone = builder.phone;
+		this.email = builder.email;
+		this.address = builder.address;
 		this.postcode = builder.postcode;
 		this.image = builder.image;
 		this.imageKey = builder.imageKey;
 		this.imageUrl = builder.imageUrl;
 		this.imageId = builder.imageId;
 	}
+
 	/**
 	 * Creates builder to build {@link CustomerVO}.
+	 * 
 	 * @return created builder
 	 */
 	@Generated("SparkTools")
 	public static Builder builder() {
 		return new Builder();
 	}
+
 	/**
 	 * Builder to build {@link CustomerVO}.
 	 */
@@ -99,9 +147,9 @@ public class CustomerVO {
 		private String firstName;
 		private String lastName;
 		private Date dateOfBirth;
-		private String street;
-		private String town;
-		private String county;
+		private String phone;
+		private String email;
+		private String address;
 		private String postcode;
 		private MultipartFile image;
 		private String imageKey;
@@ -126,18 +174,18 @@ public class CustomerVO {
 			return this;
 		}
 
-		public Builder withStreet(String street) {
-			this.street = street;
+		public Builder withPhone(String phone) {
+			this.phone = phone;
 			return this;
 		}
 
-		public Builder withTown(String town) {
-			this.town = town;
+		public Builder withEmail(String email) {
+			this.email = email;
 			return this;
 		}
 
-		public Builder withCounty(String county) {
-			this.county = county;
+		public Builder withAddress(String address) {
+			this.address = address;
 			return this;
 		}
 
@@ -170,9 +218,11 @@ public class CustomerVO {
 			return new CustomerVO(this);
 		}
 	}
+
 	@Override
 	public String toString() {
-		return "CustomerVO [firstName=" + firstName + ", lastName=" + lastName + ", dateOfBirth=" + dateOfBirth
-				+ ", street=" + street + ", town=" + town + ", county=" + county + ", postcode=" + postcode + "]";
+		return "CustomerVO [firstName=" + firstName + ", lastName=" + lastName + ", phone=" + phone + ", email=" + email
+				+ ", address=" + address + "]";
 	}
+	
 }

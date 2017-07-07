@@ -14,15 +14,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 /**
  * 
  * @author linhpham
+ * 
  *	configurations:
- * - RDS using @EnableRdsInstance from Spring. 3 properites are provided from system properties
- * - S3
- * - Elastic Cache
- * - SQS/SNS
+ * 
  */
 
 @Configuration
-@EnableRdsInstance(databaseName = "${aws.database.name}", dbInstanceIdentifier = "${aws.database.identifier}", password = "${aws.database.password}") // RDS MYSQL credential information.
 public class AwsConfiguration extends WebMvcConfigurerAdapter {
 	
 	/**
