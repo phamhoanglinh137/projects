@@ -21,3 +21,16 @@ Simple Notification Service
  - SubcribeTopicRequest to subscribe to Topic. Spring cloud aws now only support HTTP/HTTPS listener, so use this class to publish SMS/Email by Topic
 2. push message without topic.
   - PublishRequest to publish Msgs by sms/email/sqs queue/http(https)/application
+
+  
+  HOW TO SETUP
+  1. SNS/SQS
+  - create one topic
+  - create SQS subscription
+  2. RDS
+  - create mysql db, grant permission in VPC to allow Internet access.
+  - run script in project
+  3. S3
+  - create s3 bucket
+  
+ 
