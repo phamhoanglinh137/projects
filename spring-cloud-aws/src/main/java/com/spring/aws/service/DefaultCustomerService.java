@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.StringUtils;
 import com.spring.aws.exception.AwsCloudException;
-import com.spring.aws.message.SqsQueueSender;
+import com.spring.aws.message.SnsNotificationSender;
 import com.spring.aws.model.CustomerVO;
 import com.spring.aws.repo.CustomerRepository;
 import com.spring.aws.repo.entity.Address;
@@ -34,8 +34,11 @@ public class DefaultCustomerService implements CustomerService {
 	@Autowired
 	private S3FileService s3FileService;
 	
+//	@Autowired
+//	private SqsQueueSender sender;
+	
 	@Autowired
-	private SqsQueueSender sender;
+	private SnsNotificationSender snsNotificationSender;
 	
 	@Override
 	public List<CustomerVO> findCustomerByFirstName(String firstName) {
@@ -65,7 +68,11 @@ public class DefaultCustomerService implements CustomerService {
 			customer.setAddress(address);
 			customerRepository.save(customer);
 			
-			sender.send(customer.getPhone());
+			// send msg in SQS queue 
+			//sender.send(customer.getPhone());
+			
+			//send msg in SNS topic
+			snsNotificationSender.send("Registration", customer.getPhone());
 		} catch(Exception ex) {
 			log.error("Exception in register new customer", ex);
 			

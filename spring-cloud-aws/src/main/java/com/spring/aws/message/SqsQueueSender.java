@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class SqsQueueSender {
 	
 	@Autowired
-	QueueMessagingTemplate queueMessagingTemplate;
+	private QueueMessagingTemplate queueMessagingTemplate;
 	
 
 	public void send(String message) {

@@ -20,9 +20,11 @@ aws:
     bucket-name: spring-aws-s3-sp1/spring-aws
   sqs:
     queue-name: spring-aws-sqs-sp1
-  whitelist:
-    emails: 
-      - phamhoanglinh137@gmail.com
+  sns:
+    topic-name: spring-aws-sns-sp1
+    topic-arn: arn:aws:sns:ap-southeast-1:317552723554:spring-aws-sns-sp1
+admin: 
+  notification: 
     phones: 
-      - 6594262264
+      - "+6594262264"
     
