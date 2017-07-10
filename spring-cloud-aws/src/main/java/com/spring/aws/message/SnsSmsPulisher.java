@@ -35,11 +35,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * - send SMS message
  */
 @Component
-@ConfigurationProperties(prefix="admin.notification")
+@ConfigurationProperties(prefix = "admin.notification")
 public class SnsSmsPulisher {
 	Logger log = LoggerFactory.getLogger(SnsSmsPulisher.class);
-	
-	List<String> phones = new ArrayList<String>();
 	
 	@Value("${aws.sns.topic-arn}")
 	String topicArn;
@@ -48,6 +46,8 @@ public class SnsSmsPulisher {
 	AmazonSNS amazonSns;
 	
 	private Map<String, MessageAttributeValue> smsAttributes;
+	
+	List<String> phones = new ArrayList<String>();
 	
 	public List<String> getPhones() {
 		return phones;
@@ -58,28 +58,10 @@ public class SnsSmsPulisher {
 	}
 
 	/**
-	 * subscribe sms to Topic, so Admin will receive SMS when new customer is registered.
-	 * 
-	 * This part can be done in AWS console in SNS topic subscription part.
-	 * 
-	 * @param amazonSns
-	 */
-	@Autowired
-	public SnsSmsPulisher(AmazonSNS amazonSns) {
-		for (String phoneNumber : phones) {
-			log.info("Subscribing SNS for phonenumber {}", phoneNumber);
-			SubscribeRequest subscribe = new SubscribeRequest(topicArn, "sms", phoneNumber);
-			SubscribeResult subscribeResult = amazonSns.subscribe(subscribe);
-			log.info("Subscribe request: {}", amazonSns.getCachedResponseMetadata(subscribe));
-			log.info("Subscribe result: {}", subscribeResult);
-		}
-	}
-	
-	/**
 	 * initiating SMS attributes 
 	 */
-	@PostConstruct
-	public void innitiate() {
+	@Autowired
+	public SnsSmsPulisher() {
 		smsAttributes =
 		        new HashMap<String, MessageAttributeValue>();
 		smsAttributes.put("AWS.SNS.SMS.SenderID", new MessageAttributeValue()
@@ -91,6 +73,23 @@ public class SnsSmsPulisher {
 		smsAttributes.put("AWS.SNS.SMS.SMSType", new MessageAttributeValue()
 		        .withStringValue("Promotional") //Sets the type to promotional.
 		        .withDataType("String"));
+	}
+	
+	/**
+	 * 
+	 * subscribe sms to Topic, so Admin will receive SMS when new customer is registered.
+	 * 
+	 * This part can be done in AWS console in SNS topic subscription part.
+	 */
+	@PostConstruct
+	public void innitiate() {
+		for (String phoneNumber : phones) {
+			log.info("Subscribing SNS for phonenumber {}", phoneNumber);
+			SubscribeRequest subscribe = new SubscribeRequest(topicArn, "sms", phoneNumber);
+			SubscribeResult subscribeResult = amazonSns.subscribe(subscribe);
+			log.info("Subscribe request: {}", amazonSns.getCachedResponseMetadata(subscribe));
+			log.info("Subscribe result: {}", subscribeResult);
+		}
 	}
 	
 	/**
