@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/cloud/aws/messaging
 	   http://www.springframework.org/schema/cloud/spring-cloud-aws-messaging.xsd">
 	
-	<!--  Enable Queue listenr -->
+	<!--  Enable Queue listener -->
 	<aws-messaging:annotation-driven-queue-listener />
 
 </beans>
