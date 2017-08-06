@@ -1,0 +1,14 @@
+Main features in java 8
+(more details : http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html)
+
+youtube : https://www.youtube.com/playlist?list=PLsyeobzWxl7qbvNnJKjYbkTLn2w3eRy1Q
+
+1. forEach() method in Iterable interface
+2. default and static methods in Interfaces
+3. Functional Interfaces and Lambda Expressions
+4. Java Stream API for Bulk Data Operations on Collections
+5. Java Time API
+6. Collection API improvements
+7. Concurrency API improvements
+8. Java IO improvements
+10. Miscellaneous Core API improvements
