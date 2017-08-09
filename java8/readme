@@ -6,6 +6,11 @@ youtube : https://www.youtube.com/playlist?list=PLsyeobzWxl7qbvNnJKjYbkTLn2w3eRy
 1. forEach() method in Iterable interface
 2. default and static methods in Interfaces
 3. Functional Interfaces and Lambda Expressions
+   http://www.baeldung.com/java-8-functional-interfaces
+ - Functional Interface is an interface with only one abstract method 
+   regardless of whether or not a FunctionalInterface annotation is present on the interface declaration.
+   for example: Runnable, Comparable
+ 
 4. Java Stream API for Bulk Data Operations on Collections
 5. Java Time API
 6. Collection API improvements
