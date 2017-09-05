@@ -10,10 +10,16 @@ youtube : https://www.youtube.com/playlist?list=PLsyeobzWxl7qbvNnJKjYbkTLn2w3eRy
  - Functional Interface is an interface with only one abstract method 
    regardless of whether or not a FunctionalInterface annotation is present on the interface declaration.
    for example: Runnable, Comparable
- 
+  Main interfaces :
+  - Optional : wrap to avoid null pointer
+  - Predicate : one or more than one arguments and return boolean
+  - Function<T,R> : accept one argument and produces a result R
+  - Consumer: accepts one more than one arguments and return void
+  - Operator: argument and return are same type
 4. Java Stream API for Bulk Data Operations on Collections
 5. Java Time API
 6. Collection API improvements
 7. Concurrency API improvements
+   http://winterbe.com/posts/2015/04/07/java8-concurrency-tutorial-thread-executor-examples/
 8. Java IO improvements
 10. Miscellaneous Core API improvements
