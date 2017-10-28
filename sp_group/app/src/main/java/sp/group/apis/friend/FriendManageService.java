@@ -23,9 +23,9 @@ public interface FriendManageService {
 	
 	Set<String> retrieveFriend(String email) throws ApiException;
 	
-	List<String> retrieveMutual(String email) throws ApiException;
+	List<String> retrieveMutual(String email1, String email2) throws ApiException;
 	
-	List<String> send(String sender) throws ApiException;;
+	List<String> send(String senderEmail) throws ApiException;;
 	
 	User retrieve(String email) throws ApiException;
 
