@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="60">
+	<Properties>
+		<Property name="log-path">/logs</Property>
+	</Properties>
+	<Appenders>
+		<Console name="Console-Appender" target="SYSTEM_OUT">
+			<PatternLayout>
+				<pattern>
+					[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} -%msg%n
+				</pattern>
+			</PatternLayout>
+		</Console>
+		<RollingFile name="App-File-Appender" fileName="${log-path}/sp_app_log.log"
+			filePattern="${log-path}/sp_app_log-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<pattern>
+					[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} -%msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+		<RollingFile name="Boot-File-Appender" fileName="${log-path}/sp_boot_log.log"
+			filePattern="${log-path}/sp_boot_log-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<pattern>
+					[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} -%msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1"
+					modulate="true" />
+			</Policies>
+		</RollingFile>
+	</Appenders>
+	
+	<Loggers>
+		<Logger name="org.springframework" level="info" additivity="false">
+			<AppenderRef ref="Boot-File-Appender" />
+			<AppenderRef ref="Console-Appender" />
+		</Logger>
+		<Logger name="sg.group" level="info" additivity="false">
+			<AppenderRef ref="App-File-Appender" />
+			<AppenderRef ref="Console-Appender" />
+		</Logger>
+		<Root>
+			<AppenderRef ref="Console-Appender" />
+		</Root>
+	</Loggers>
+	
+</Configuration>

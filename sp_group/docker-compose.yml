@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  database:
+    image: sp_db_img
+    container_name: sp_db
+    build: ./database
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: "sp_group_db"
+      MYSQL_USER: "sp_group"
+      MYSQL_PASSWORD: "sp_group_pwd"
+      MYSQL_ROOT_PASSWORD: "root"
+  app:
+    image: sp_app_img
+    links:
+      - database
+    container_name: sp_app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    volumes:
+      - ./app/deploy:/sp_group/deploy
+    ports:
+      - 8090:8080
