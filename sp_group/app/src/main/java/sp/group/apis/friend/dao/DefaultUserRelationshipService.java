@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import sp.group.apis.friend.FriendType;
 
@@ -14,6 +15,7 @@ import sp.group.apis.friend.FriendType;
  * @author linhpham
  *
  */
+@Service
 public class DefaultUserRelationshipService implements UserRelationshipService {
 
 	@Autowired
