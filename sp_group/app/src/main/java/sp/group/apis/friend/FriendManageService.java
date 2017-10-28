@@ -17,7 +17,7 @@ public interface FriendManageService {
 	
 	void connect(String email1, String email2);
 	
-	void subscribe(String requestor, String target);
+	void subscribe(String requestor, String target) throws ApiException;
 	
 	void block(String requestor, String target) throws ApiException;
 	
