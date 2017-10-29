@@ -1,0 +1,231 @@
+{
+	"id": "30e21b46-1e07-6f32-a660-44598bda8a36",
+	"name": "sp",
+	"description": "",
+	"order": [
+		"3b6ec55c-9bde-6a76-7a49-6857ef972973",
+		"02b4a558-c62b-08ff-289c-04b7ad03b335",
+		"60ed4835-1b84-e162-39a5-d2cc13068210",
+		"9ba38df3-7cb9-adbc-a0a7-43fda9d208de",
+		"66d9ac31-f81c-2bf0-1fb7-1b853acf2479",
+		"0b2c0ba4-ef49-5b73-4d0c-89099befad13",
+		"031c853a-a07e-04af-b99a-821bdc1bda4b"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 0,
+	"owner": "1088378",
+	"public": false,
+	"requests": [
+		{
+			"id": "02b4a558-c62b-08ff-289c-04b7ad03b335",
+			"headers": "",
+			"headerData": [],
+			"url": "localhost:8090/friends?email=andy@example.com",
+			"folder": null,
+			"queryParams": [
+				{
+					"key": "email",
+					"value": "andy@example.com",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509298051792,
+			"name": "friends",
+			"description": "",
+			"collectionId": "30e21b46-1e07-6f32-a660-44598bda8a36"
+		},
+		{
+			"id": "031c853a-a07e-04af-b99a-821bdc1bda4b",
+			"headers": "",
+			"headerData": [],
+			"url": "localhost:8090/mutual?email1=andy1@example.com&email2=andy@example.com",
+			"queryParams": [
+				{
+					"key": "email1",
+					"value": "andy1@example.com",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "email2",
+					"value": "andy@example.com",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509298088845,
+			"name": "mutual friends - GET",
+			"description": "",
+			"collectionId": "30e21b46-1e07-6f32-a660-44598bda8a36",
+			"responses": []
+		},
+		{
+			"id": "0b2c0ba4-ef49-5b73-4d0c-89099befad13",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8090/send",
+			"folder": null,
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509298327062,
+			"name": "send msg",
+			"description": "",
+			"collectionId": "30e21b46-1e07-6f32-a660-44598bda8a36",
+			"rawModeData": "{\n  \"sender\":\"linh3@example.com\",\n  \"text\" : \"123123123\"\n}"
+		},
+		{
+			"id": "3b6ec55c-9bde-6a76-7a49-6857ef972973",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8090/connect",
+			"folder": null,
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "PUT",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509298049128,
+			"name": "connect",
+			"description": "",
+			"collectionId": "30e21b46-1e07-6f32-a660-44598bda8a36",
+			"rawModeData": "{\n  \"friends\" :[\n    \"andy1@example.com\",\n    \"linh2@example.com\"\n  ]\n}"
+		},
+		{
+			"id": "60ed4835-1b84-e162-39a5-d2cc13068210",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8090/mutual",
+			"folder": null,
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509298054217,
+			"name": "mutual friends - POST",
+			"description": "",
+			"collectionId": "30e21b46-1e07-6f32-a660-44598bda8a36",
+			"rawModeData": "{\n  \"friends\" :[\n    \"andy@example.com\",\n    \"andy1@example.com\"\n  ]\n}"
+		},
+		{
+			"id": "66d9ac31-f81c-2bf0-1fb7-1b853acf2479",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8090/block",
+			"folder": null,
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509298504658,
+			"name": "block",
+			"description": "",
+			"collectionId": "30e21b46-1e07-6f32-a660-44598bda8a36",
+			"rawModeData": "{\n  \"requestor\" :\"andy@example.com\",\n  \"target\":\"linh2@example.com\"\n}"
+		},
+		{
+			"id": "9ba38df3-7cb9-adbc-a0a7-43fda9d208de",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "localhost:8090/subscribe",
+			"folder": null,
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1509298284437,
+			"name": "subscribe",
+			"description": "",
+			"collectionId": "30e21b46-1e07-6f32-a660-44598bda8a36",
+			"rawModeData": "{\n  \"requestor\" :\"linh1@example.com\",\n  \"target\":\"linh3@example.com\"\n}"
+		}
+	]
+}
