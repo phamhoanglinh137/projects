@@ -47,8 +47,8 @@ public class DefaultFriendManageService implements FriendManageService {
 
 	@Override
 	public void subscribe(String requestor, String target) throws ApiException {
-		User user1 = retrieve(requestor);
-		User user2 = retrieve(target);
+		User user1 = userService.persist(requestor);
+		User user2 = userService.persist(target);
 		
 		userRelationshipService.subscribe(user1.getUserId(), user2.getUserId());
 	}

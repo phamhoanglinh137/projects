@@ -1,10 +1,12 @@
-version: "3"
+version: "2.1"
 
 services:
-  database:
+  db:
     image: sp_db_img
     container_name: sp_db
-    build: ./database
+    build:
+      context: ./database
+      dockerfile: Dockerfile
     ports:
       - 3306:3306
     environment:
@@ -12,11 +14,19 @@ services:
       MYSQL_USER: "sp_group"
       MYSQL_PASSWORD: "sp_group_pwd"
       MYSQL_ROOT_PASSWORD: "root"
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW SCHEMAS;\""
+      interval: 3s
+      timeout: 1s
+      retries: 5
   app:
     image: sp_app_img
     links:
-      - database
+      - db
     container_name: sp_app
+    depends_on:
+      db:
+        condition: service_healthy
     build:
       context: ./app
       dockerfile: Dockerfile

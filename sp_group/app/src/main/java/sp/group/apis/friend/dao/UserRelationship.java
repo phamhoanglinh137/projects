@@ -31,11 +31,11 @@ public class UserRelationship {
 	private boolean block;
 	
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="friend_id", referencedColumnName="user_id", insertable = false, updatable = false)
+	@JoinColumn(name="user_id", referencedColumnName="user_id", insertable = false, updatable = false)
 	private User user;
 	
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="user_id", referencedColumnName="user_id", insertable = false, updatable = false)
+	@JoinColumn(name="friend_id", referencedColumnName="user_id", insertable = false, updatable = false)
 	private User friend;
 	
 	public UserRelationship() {
