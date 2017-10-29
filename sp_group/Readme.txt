@@ -15,3 +15,6 @@
 
 4. Test APIs
    import sp.postman_collection file into PostMan plugin and test.
+
+5. View Swagger API
+   http://localhost:8090/swagger-ui.html
