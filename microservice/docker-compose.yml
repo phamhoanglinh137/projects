@@ -12,7 +12,7 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - ./esdata:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     networks:
@@ -22,6 +22,20 @@ services:
     container_name: kibana
     ports:
       - 5601:5601
+    depends_on:
+      - elasticsearch
+    networks:
+      - esnet
+  logstash:
+    image: docker.elastic.co/logstash/logstash:6.0.0
+    container_name: logstash
+    environment:
+      - "LS_JAVA_OPTS=-Xmx256m -Xms256m"
+    ports:
+      - 5000:5000
+    volumes:
+      - ./logstash/config:/usr/share/logstash/config
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
     depends_on:
       - elasticsearch
     networks:
