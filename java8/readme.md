@@ -1,10 +1,10 @@
 Main features in java 8
 
-http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html
-https://www.youtube.com/playlist?list=PLsyeobzWxl7qbvNnJKjYbkTLn2w3eRy1Q
-https://zeroturnaround.com/rebellabs/java-8-streams-cheat-sheet/
-http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/
-
+<br>http://www.oracle.com/technetwork/java/javase/8-whats-new-2157071.html
+<br>https://www.youtube.com/playlist?list=PLsyeobzWxl7qbvNnJKjYbkTLn2w3eRy1Q
+<br>https://zeroturnaround.com/rebellabs/java-8-streams-cheat-sheet/
+<br>http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/
+<br>
 1. forEach() method in Iterable interface
 2. default and static methods in Interfaces
 3. Functional Interfaces and Lambda Expressions
