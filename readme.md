@@ -7,3 +7,5 @@ There are multiple projects
 3. spring_cloud_aws
 - sample using Spring boot with AWS S3, SQS, SNS...
 4. java8
+5. KafkaFeatures
+ - samples using kafka (consumer, producer, broker, connect and stream)
