@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
  * - filter 
  * - map 
  * - sort 
- * - peek 
+ * - peek
  * - distinct 
  * - flatmap
  * 

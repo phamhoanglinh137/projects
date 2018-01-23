@@ -1,0 +1,13 @@
+cd /Users/linhpham/Documents/AppInstall/apache/kafka/kafka_2.12-1.0.0/bin
+
+./zookeeper-server-start.sh ../config/zookeeper.properties
+
+./kafka-server-start.sh ../config/server.properties
+
+./kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 2 --topic account_open
+
+./kafka-configs.sh --zookeeper localhost:2181 --entity-type topics --entity-name account_open --describe
+
+./kafka-configs.sh --describe --zookeeper localhost:2181 --entity-type brokers
+
+./kafka-configs.sh --describe --zookeeper localhost:2181 --entity-type topics
