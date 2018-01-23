@@ -1,9 +1,16 @@
 
-path : /Users/linhpham/Documents/AppInstall/apache/kafka/kafka_2.12-1.0.0/bin
+# How to run
 
-1. start Zookeeper
+cd $KAFKA_HOME
 
-2. start Brokers (Servers)
+1.Start Zookeeper
+./bin/zookeeper-server-start.sh ./config/zookeeper.properties
 
-3. Create topics
+2. Start server (brokers)
+./bin/kafka-server-start.sh ./config/server.properties
 
+3. Start topic
+./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 2 --topic account_open
+
+  Describer topic
+./bin/kafka-topics.sh --zookeeper localhost:2181 --describe account_open
