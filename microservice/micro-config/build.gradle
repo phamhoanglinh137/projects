@@ -1,24 +1,25 @@
 buildscript {
-	ext {
-		springBootVersion = '1.5.2.RELEASE'
-	}
+	ext {bootVersion = '1.5.2.RELEASE'}
+	ext {gradlePluginVersion = '1.0.4.RELEASE'}
+	ext {cloudVersion = 'Camden.SR7'}
+	
 	repositories {
 		mavenCentral()
 	}
 	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath('io.spring.gradle:dependency-management-plugin:0.5.4.RELEASE')
+		//classpath("org.springframework.boot:spring-boot-gradle-plugin:${bootVersion}")
+		classpath("io.spring.gradle:dependency-management-plugin:${gradlePluginVersion}")
 	}
 }
 
+//apply plugin: 'eclipse'
+//apply plugin: 'idea'
+//apply plugin: 'org.springframework.boot'
 apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 jar {
-	baseName = 'configuration-service'
+	baseName = 'config'
 	version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
@@ -28,14 +29,20 @@ repositories {
 	mavenCentral()
 }
 
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-starter-parent:${cloudVersion}"
+		mavenBom "org.springframework.boot:spring-boot-starter-parent:${bootVersion}"
+	}
+
+}
+
 dependencies {
 	compile('org.springframework.cloud:spring-cloud-config-server')
+	compile('org.springframework.cloud:spring-cloud-starter-eureka')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Camden.SR5"
-	}
-}
 

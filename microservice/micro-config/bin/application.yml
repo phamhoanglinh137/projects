@@ -1,11 +1,20 @@
+server:
+  port: 8081
+logging: 
+  level: 
+    root: info  
 spring:
+  application: 
+    name: config
+  profiles: 
+    active: native
   cloud:
     config:
       server:
         native:
           search-locations: classpath:/shared
-  profiles:
-     active: native
+ #       git: 
+ #         uri: file:/Users/phamhoanglinh/git/cloud # local git 
+ #         search-paths: '*'
 
-server:
-  port: 8888
+

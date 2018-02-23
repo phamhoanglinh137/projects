@@ -1,0 +1,7 @@
+eureka: 
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8082/eureka
+ 

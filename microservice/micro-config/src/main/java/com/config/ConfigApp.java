@@ -1,4 +1,4 @@
-package com.spring.micro.config;
+package com.config;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,8 +12,8 @@ import org.springframework.cloud.config.server.EnableConfigServer;
 
 @SpringBootApplication
 @EnableConfigServer
-public class MicroServerConfigApplication {
+public class ConfigApp {
 	public static void main(String[] args) {
-		SpringApplication.run(MicroServerConfigApplication.class, args);
+		SpringApplication.run(ConfigApp.class, args);
 	}
 }

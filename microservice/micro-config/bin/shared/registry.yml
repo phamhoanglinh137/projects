@@ -1,0 +1,10 @@
+server: 
+  port: 8082
+eureka: 
+  instance: 
+    prefer-ip-address: true
+  client: 
+    registerWithEureka: false
+    fetchRegistry: false
+  server: 
+    waitTimeInMsWhenSyncEmpty: 0
