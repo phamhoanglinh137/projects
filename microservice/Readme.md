@@ -1,9 +1,9 @@
 MicroService
 
 1. Tech stack.
-  ![Tech stack](micro_netflix.png)
-  ![Tech stack](micro_elk.png)
-  
+  ![Tech stack](micro.png)
+
+
    - Spring Cloud : spring eureka discovery/registry, feign, hytrix, dashboard, spring config, spring auth services and security.
    - Apache kafka
    - ELK (elasticsearch, logstask, kibana) for centralized logging
