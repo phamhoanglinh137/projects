@@ -1,47 +1,21 @@
-buildscript {
-	ext {gradlePluginVersion = '1.0.4.RELEASE'}
-	ext {cloudVersion = 'Camden.SR7'}
-	ext {bootVersion = '1.5.10.RELEASE'}
-	
-	repositories {
-		mavenCentral()
+package com.auth;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+
+public class CustomTokenEnhancer implements TokenEnhancer  {
+	@Override
+    public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+        final Map<String, Object> additionalInfo = new HashMap<>();
+        additionalInfo.put("organization", authentication.getName() + UUID.randomUUID().toString());
+        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
+        return accessToken;
     }
-	
-    dependencies {
-        classpath "io.spring.gradle:dependency-management-plugin:${gradlePluginVersion}"
-    }
+
 }
-
-apply plugin: 'java'
-apply plugin: "io.spring.dependency-management"
-
-repositories {
-    mavenCentral()
-}
-
-dependencyManagement {
-     imports {
-          mavenBom "org.springframework.cloud:spring-cloud-starter-parent:${cloudVersion}"
-          mavenBom "org.springframework.boot:spring-boot-starter-parent:${bootVersion}"
-     }
-     
-      dependencies {
-     	dependency "net.logstash.logback:logstash-logback-encoder:4.9"
-     }
-}
-
-dependencies {
-	compile "org.springframework.boot:spring-boot-starter-security"
-	compile "org.springframework.security.oauth:spring-security-oauth2" //enable OAuth2
-	compile "org.springframework.security:spring-security-jwt" //enable JWT token
-	compile "org.springframework:spring-expression"
-	
-	compile "org.springframework.cloud:spring-cloud-starter-config"
-	compile "org.springframework.cloud:spring-cloud-starter-eureka"
-    compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.springframework.retry:spring-retry" // Config Client Retry : https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_client.html
-    compile "org.springframework.boot:spring-boot-starter-aop"  // Config Client Retry : https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_client.html
-    
-    compile "net.logstash.logback:logstash-logback-encoder"
-} 
-
