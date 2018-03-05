@@ -1,0 +1,61 @@
+buildscript {
+	ext {bootVersion = '1.5.2.RELEASE'}
+	ext {gradlePluginVersion = '1.0.4.RELEASE'}
+	ext {cloudVersion = 'Camden.SR7'}
+	
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("io.spring.gradle:dependency-management-plugin:${gradlePluginVersion}")
+	}
+}
+
+//apply plugin: 'eclipse'
+//apply plugin: 'idea'
+//apply plugin: 'org.springframework.boot'
+apply plugin: 'java'
+apply plugin: 'io.spring.dependency-management'
+
+jar {
+	baseName = 'account'
+	version = '0.0.1-SNAPSHOT'
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-starter-parent:${cloudVersion}"
+		mavenBom "org.springframework.boot:spring-boot-starter-parent:${bootVersion}"
+	}
+	dependencies {
+	 	dependency "net.logstash.logback:logstash-logback-encoder:4.9"
+	 	dependency "org.projectlombok:lombok:1.16.20"
+	 	dependency "commons-io:commons-io:2.5"
+	 }
+}
+
+dependencies { 
+		compile "org.springframework.boot:spring-boot-starter-security" 
+		compile "org.springframework.security.oauth:spring-security-oauth2" //enable OAuth2 compile "org.springframework.security:spring-security-jwt" //enable JWT token compile "org.springframework:spring-expression"
+		compile "org.springframework.security:spring-security-jwt" //enable JWT token compile "org.springframework:spring-expression"
+		
+		compile "org.springframework.cloud:spring-cloud-starter-config"
+		compile "org.springframework.cloud:spring-cloud-starter-eureka"
+		compile "org.springframework.boot:spring-boot-starter-web"
+		compile "org.springframework.retry:spring-retry" // Config Client Retry : https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_client.html
+		compile "org.springframework.boot:spring-boot-starter-aop"  // Config Client Retry : https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_client.html
+
+		compile "net.logstash.logback:logstash-logback-encoder"
+		compile ("org.projectlombok:lombok")
+		compile ("commons-io:commons-io")
+		
+		testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+
