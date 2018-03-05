@@ -1,0 +1,15 @@
+server: 
+  port: 8083
+token: 
+  file: 
+    path: mytest.jks
+    password: mypass
+    keypair: mykey
+eureka: 
+  instance: 
+    prefer-ip-address: true
+  client: 
+    registerWithEureka: false
+    fetchRegistry: false
+  server: 
+    waitTimeInMsWhenSyncEmpty: 0

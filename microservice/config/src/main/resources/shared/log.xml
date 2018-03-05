@@ -25,18 +25,23 @@
 		</rollingPolicy>
 	</appender>
 
-	<appender name="STASH"
-		class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-		<destination>${LOGSTASH_SERVER}</destination>
+	<appender name="STASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+<!-- 		<destination>${LOGSTASH_SERVER}</destination> -->
+		<destination>127.0.0.1:4560</destination>
 		<encoder class="net.logstash.logback.encoder.LogstashEncoder" />
 	</appender>
 	
-
-	<logger name="com" level="debug" additivity="false">
+	
+	<logger name="com.registry" level="error" additivity="false">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="STASH" />
+<!-- 		<appender-ref ref="STASH" /> -->
 	</logger>
-
+	
+	<logger name="com" level="info" additivity="false">
+		<appender-ref ref="STDOUT" />
+<!-- 		<appender-ref ref="STASH" /> -->
+	</logger>
+	
 	<root level="error">
 		<appender-ref ref="STDOUT" />
 	</root>
