@@ -252,3 +252,201 @@ dependencyManagement {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }
+
+
+-------------------
+
+  @Bean
+  @ServiceActivator(inputChannel = "abc")
+  public MessageHandler acctHolderInqOutbound() throws Exception {
+
+    AcctHolderInqMarshaller marshaller = new AcctHolderInqMarshaller(statusCodes);
+    marshaller.setContextPaths("com.schema",
+        "com.schema");
+
+    MarshallingWebServiceOutboundGateway outboundGateway =
+        new MarshallingWebServiceOutboundGateway(acctHolderInqUrl, marshaller, marshaller);
+    WebServiceMessageCallback messageCallback = new SoapActionCallback(soapAction);
+
+    outboundGateway.setSendTimeout(defaultTimeOut);
+    outboundGateway.setMessageSender(fwkNtbSoiRequestSender);
+    logger.debug("uri::{} \n\r soapAction:: {}", acctHolderInqUrl, soapAction);
+
+    DefaultSoapHeaderMapper defHeader = new DefaultSoapHeaderMapper();
+    defHeader.setRequestHeaderNames("SOAPAction");
+
+    SaajSoapMessageFactory saajSoapMessageFactory = new SaajSoapMessageFactory();
+    saajSoapMessageFactory.setMessageFactory(MessageFactory.newInstance());
+    saajSoapMessageFactory.setSoapVersion(SoapVersion.SOAP_12);
+    saajSoapMessageFactory.afterPropertiesSet();
+
+    outboundGateway.setMessageFactory(saajSoapMessageFactory);
+    outboundGateway.setHeaderMapper(defHeader);
+    outboundGateway.setInterceptors(new AcctHolderInqInterceptor(msgVersion, srvVersion, clientId, clientOrg,
+      clientCtry, operatorRole, operatorLoginId, ServerIpAddress.get()));
+    outboundGateway.setRequestCallback(messageCallback);
+
+    logger.debug("created messagehandler for::{}", acctHolderInqUrl);
+
+    return outboundGateway;
+  }
+
+  @Bean
+  public MessageChannel abc() {
+    return new DirectChannel();
+  }
+  
+  ------------------
+  
+  
+  
+  public class AcctHolderInqMarshaller extends Jaxb2Marshaller {
+  
+  private List<String> statusCodeLs;
+  
+  public AcctHolderInqMarshaller(String statusCodes) {
+    this.statusCodeLs = Arrays.asList(statusCodes.split("\\|"));
+  }
+
+  @Override
+  public Object unmarshal(Source source) throws XmlMappingException {
+    return super.unmarshal(source, null);
+  }
+
+  @Override
+  public Object unmarshal(Source source, MimeContainer mimeContainer) throws XmlMappingException {
+    logger.debug("Inside Custom JaxbWrapper unmarshal");
+    Object mimeMessage = new DirectFieldAccessor(mimeContainer).getPropertyValue("mimeMessage");
+    Object unmarshalObject = null;
+    if (mimeMessage instanceof SaajSoapMessage) {
+      SaajSoapMessage soapMessage = (SaajSoapMessage) mimeMessage;
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      try {
+        soapMessage.writeTo(out);
+      } catch (IOException e) {
+        logger.error("Error Unmarshalling:" + e.getMessage());
+        throw convertJaxbException(new JAXBException(e.getMessage()));
+      }
+      String responseMsg = new String(out.toByteArray());
+      logger.info("response envelope: \n\r" + responseMsg);
+
+      String faultReason = soapMessage.getFaultReason();
+      if (StringUtils.isNotBlank(faultReason)) {
+        Source detailSource = (Source) soapMessage
+            .getEnvelope().getBody().getFault().getFaultDetail().getDetailEntries().next().getSource();
+        DetailInfo detailInfo = (DetailInfo) this.unmarshal(detailSource);
+        
+        logger.info("Status Code: " + detailInfo.getStatusCode());
+        if(statusCodeLs.contains(detailInfo.getStatusCode())) {
+          logger.info("Account Holder profile not found");
+          return new AcctHolderDetlInqResponse(); // Spring integration not support NULL return
+        } else {
+          logger.error("Response got FAULT, faultReason::" + faultReason);
+          throw convertJaxbException(new JAXBException(faultReason));
+        }
+      } else {
+        logger.info("Response Success");
+        unmarshalObject = super.unmarshal(source, mimeContainer);
+      }
+    }
+    return unmarshalObject;
+  }
+  
+}
+-------------------
+public class ABC implements ClientInterceptor {
+
+  
+  
+  private String msgVersion;
+
+  private String srvVersion;
+
+  private String clientId;
+
+  private String clientOrg;
+
+  private String clientCtry;
+
+  private String operatorRole;
+  
+  private String operatorLoginId;
+  
+  private String operatorInternalId;
+  
+  public AcctHolderInqInterceptor(String msgVersion, String srvVersion, String clientId,
+      String clientOrg, String clientCtry, String operatorRole, String operatorLoginId, String operatorInternalId) {
+    this.msgVersion = msgVersion;
+    this.srvVersion = srvVersion;
+    this.clientId = clientId;
+    this.clientOrg = clientOrg;
+    this.clientCtry = clientCtry;
+    this.operatorRole = operatorRole;
+    this.operatorLoginId = operatorLoginId;
+    this.operatorInternalId = operatorInternalId;
+  }
+  
+  @Override
+  public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
+    SoapMessage soapMessage = (SoapMessage) messageContext.getRequest();
+    logger.info("SOAPAction::{}", soapMessage.getSoapAction());
+    try {
+      
+      SoapHeader sh = soapMessage.getSoapHeader();
+      JAXBContext context = JAXBContext.newInstance(MsgDetl.class, Trace.class);
+      Marshaller marshaller = context.createMarshaller();
+      
+      MsgDetl msgDetail = new MsgDetl();
+      msgDetail.setMsgVersion(msgVersion);
+      
+      msgDetail.setMsgUID(UUID.randomUUID().toString().replace("-", StringUtils.EMPTY));
+      msgDetail.setSvcVersion(srvVersion);
+      marshaller.marshal(msgDetail, sh.getResult());
+      
+      Trace trace = new Trace();
+      GregorianCalendar currentDate = new GregorianCalendar();
+      currentDate.setTime(LocalDateTime.now().toDate());
+      
+      trace.setRqDateTime(DatatypeFactory.newInstance().newXMLGregorianCalendar(currentDate));
+      
+      RqClient rqClient = new RqClient();
+      rqClient.setRqClientId(clientId);
+      rqClient.setRqClientOrg(clientOrg);
+      rqClient.setRqClientCtry(clientCtry);
+      trace.setRqClient(rqClient);
+      
+      Operator operator = new Operator();
+      operator.setOpInternalId(operatorInternalId);
+      operator.setOpLoginId(operatorLoginId);
+      operator.setOpRole(operatorRole);
+      trace.setOperator(operator);
+      
+      marshaller.marshal(trace, sh.getResult());
+
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      soapMessage.writeTo(out);
+      String strMsg = new String(out.toByteArray());
+      logger.info("request envelope: \n\r {}", strMsg);
+      
+    } catch (IOException| JAXBException | DatatypeConfigurationException ex) {
+      
+      throw new WebServiceFaultException(ex.getMessage());
+    } 
+    return true;
+  }
+
+  @Override
+  public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
+    return false;
+  }
+
+  @Override
+  public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
+    return false;
+  }
+
+  @Override
+  public void afterCompletion(MessageContext messageContext, Exception ex)
+      throws WebServiceClientException {
+  }
+}
