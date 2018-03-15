@@ -23,10 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class WeatherApplication {
 
 	public static void main(String[] args) {
-		System.setProperty("http.proxyHost", "10.5.127.23");
-		System.setProperty("http.proxyPort", "80");
-		System.setProperty("http.proxyUser", "phamhoanglinh");
-		System.setProperty("http.proxyPassword", "123Welcome");
+		
 		SpringApplication.run(WeatherApplication.class, args);
 	}
 	
