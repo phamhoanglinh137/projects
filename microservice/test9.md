@@ -1,171 +1,57 @@
-server:
-  port: 8084
-app: 
-  resource: 
-    id: my_resource_id
-spring:
-  h2: 
-    console: 
-      enabled: true
-      path: /h2  
-  datasource: 
-    url: jdbc:h2:file:~/accountdb
-    username: sa
-    password: 
-  jpa:
-    show-sql: false
-    hibernate: 
-      ddl-auto: create-drop
-    properties:
-      hibernate: 
-        dialect: org.hibernate.dialect.H2Dialect
-  --------
-  
-  eureka: 
-  instance: 
-    prefer-ip-address: true
-  client:
-    serviceUrl:
-      defaultZone: ${EUREKA_SERVER}/eureka/
-app:
-  internal: 
-    user: SERVER
-    password: SERVER_PWD
-    role: SERVER
---------
-server:
-  port: 8083
-token: 
-  file: 
-    path: jwt-test.jks # store in auth module locally coz spring config server not really support binary file, it is causing format file exception during loading keystore by URL
-    keypair: jwt-test
-    password: mypass
-spring:
-  h2: 
-    console: 
-      enabled: true
-      path: /h2  
-  datasource: 
-    url: jdbc:h2:file:~/authdb
-    username: sa
-    password: 
-  jpa:
-    show-sql: false
-    hibernate: 
-      ddl-auto: create-drop
-    properties:
-      hibernate: 
-        dialect: org.hibernate.dialect.H2Dialect
------
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+buildscript {
+	ext {
+		springBootVersion = '2.0.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
 
-    <property name="LOG_PATH" value="${app.log.path}"/>
-    <property name="FILE_NAME" value="${app.name}"/>
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+ext {
+	springCloudVersion = 'Finchley.M8'
+	//springCloudVersion='Brixton.RELEASE'
+}
+
+dependencies {
+	compile "org.springframework.cloud:spring-cloud-starter-config"
+	compile "org.springframework.cloud:spring-cloud-starter-openfeign"
+	compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+	
+	compile "org.springframework.security.oauth:spring-security-oauth2:2.2.1.RELEASE" //enable OAuth2
+	compile "org.springframework.security:spring-security-jwt:1.0.9.RELEASE" //enable JWT token
+	
+	compile "org.springframework.boot:spring-boot-starter-security"
+	compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.retry:spring-retry" // Config Client Retry : https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_client.html
+    compile "org.springframework.boot:spring-boot-starter-aop"  // Config Client Retry : https://cloud.spring.io/spring-cloud-config/multi/multi__spring_cloud_config_client.html
     
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
-        </encoder>
-    </appender>
-    
-    <appender name="SAVE-TO-FILE" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_PATH}/${FILE_NAME}.log</file>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>
-                %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
-            </Pattern>
-        </encoder>
-    </appender>
-	
-	<appender name="STASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-      <destination>127.0.0.1:9001</destination>
+    compile "net.logstash.logback:logstash-logback-encoder:4.9"
+    compile 'com.h2database:h2'
+    compile "org.projectlombok:lombok:1.16.20"
+    compile "commons-io:commons-io:2.5"
+     
+    compile "net.logstash.logback:logstash-logback-encoder"
+} 
 
-      <!-- encoder is required -->
-      <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
-  	</appender>
-  
-	
-    <logger name="com" additivity="false" level="debug">
-	    <appender-ref ref="SAVE-TO-FILE" />
-        <appender-ref ref="STDOUT" />
-<!--         <appender-ref ref="STASH" /> -->
-	</logger>
-	
-	<logger name="com.registry" additivity="false" level="error">
-	    <appender-ref ref="SAVE-TO-FILE" />
-        <appender-ref ref="STDOUT" />
-<!--         <appender-ref ref="STASH" /> -->
-	</logger>
-	
-<!-- 	<logger name="org.springframwork" additivity="false" level="debug"> -->
-<!-- 	    <appender-ref ref="SAVE-TO-FILE" /> -->
-<!--         <appender-ref ref="STDOUT" /> -->
-<!--         <appender-ref ref="STASH" /> -->
-<!-- 	</logger> -->
-
-    <root level="debug">
-        <appender-ref ref="STDOUT" />
-<!--         <appender-ref ref="SAVE-TO-FILE" /> -->
-<!--         <appender-ref ref="STASH" /> -->
-    </root>
-
-</configuration>
-
-
--------
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-
-    <property name="LOG_PATH" value="${app.log.path}"/>
-    <property name="FILE_NAME" value="${app.name}"/>
-    
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
-        </encoder>
-    </appender>
-    
-    <appender name="SAVE-TO-FILE" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_PATH}/${FILE_NAME}.log</file>
-        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>
-                %d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n
-            </Pattern>
-        </encoder>
-    </appender>
-	
-	<appender name="STASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-      <destination>127.0.0.1:9001</destination>
-
-      <!-- encoder is required -->
-      <encoder class="net.logstash.logback.encoder.LogstashEncoder" />
-  	</appender>
-  
-	
-
-    <root level="error">
-        <appender-ref ref="STDOUT" />
-    </root>
-
-</configuration>
-
-------
-
-server:
-  port: 8082
-#spring: 
-#  cloud:
-#    config: 
-#      discovery: 
-#        serviceId: config
-#        enabled: true
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    registerWithEureka: false
-    fetchRegistry: false
-  server: 
-    waitTimeInMsWhenSyncEmpty: 0
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
 
