@@ -1,370 +1,163 @@
-package com.auth;
+package com.auth.api.repo;
 
-import java.util.Arrays;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public interface AuthRepository extends JpaRepository<UserCredential, String>{
+	UserCredential findByUsername(String username);
+}
+
+---
+
+
+package com.auth.api.repo;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Builder
+@Data
+@NoArgsConstructor @AllArgsConstructor
+@Entity
+@Table(name = "user_credential")
+public class UserCredential {
+	@Id
+	private String username;
+	
+	private String password;
+	
+	private String role;
+}
+
+
+---
+
+package com.auth.api;
+
+import java.security.Principal;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
-import org.springframework.security.oauth2.provider.token.TokenEnhancer;
-import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
-import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
-import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
  * @author phamhoanglinh
  *
  */
-@SpringBootApplication
-@EnableFeignClients
-@EnableDiscoveryClient //https://stackoverflow.com/questions/31976236/whats-the-differen	ce-between-enableeurekaclient-and-enablediscoveryclient
-public class AuthApp {
+@RestController
+@RequestMapping("/user")
+@Slf4j
+public class AuthController {
 	
-    public static final Logger logger = LoggerFactory.getLogger(AuthApp.class);
+	@Autowired
+	private AuthService authService;
 	
-	public static void main(String[] arguments) throws Exception {
-		SpringApplication.run(AuthApp.class, arguments);
-	}
-
-	/**
-	 * 
-	 * security configuration
-	 *
-	 */
-	@Configuration
-	@EnableWebSecurity
-	@EnableGlobalMethodSecurity(prePostEnabled = true)
-	@Order(1)
-	public static class SecurityConfig extends WebSecurityConfigurerAdapter {
-		@Autowired
-		private UserDetailsService authUserDetailService;
-		
-		/*
-		 * there are 3 options:
-		 * - use custom Authentication Provider to do your own authentication.
-		 * - use custom UserDetailService to load by user name using default DaoAuthenticationProvider.
-		 * - use In Memory for testing below
-		 */
-		@Override
-		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-			auth.userDetailsService(authUserDetailService)
-				.passwordEncoder(new PasswordEncoder() {
-					@Override
-					public boolean matches(CharSequence rawPassword, String encodedPassword) {
-						return rawPassword.toString().equals(encodedPassword);
-					}
-					
-					@Override
-					public String encode(CharSequence rawPassword) {
-						return rawPassword.toString();
-					}
-				});
-		}
-		
-		
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.csrf().disable()
-				.requestMatchers().antMatchers("/login", "/oauth/authorize")
-            .and()
-				.authorizeRequests()
-							.antMatchers(HttpMethod.PUT).permitAll()
-							.anyRequest().authenticated()
-            .and()
-            		.formLogin().permitAll();
-		}
-		
-		@Override
-		public void configure(WebSecurity web) throws Exception {
-			super.configure(web);
-		}
-		
-		@Override
-		@Bean
-		public AuthenticationManager authenticationManagerBean() throws Exception {
-			return super.authenticationManagerBean();
-		}
-	}
-
-	/**
-	 * 
-	 * http://projects.spring.io/spring-security-oauth/docs/oauth2.html
-	 * 
-	 * oauth2 security configuration
-	 *
-	 */
-	@Configuration
-	@EnableAuthorizationServer
-	public static class OAuth2SecurityConfig extends AuthorizationServerConfigurerAdapter {
-		
-		@Autowired
-		private Environment env;
-		
-		/*
-		 * use the same authenticationManager with Security above ( default is ProviderManager)
-		 */
-		@Autowired
-		@Qualifier("authenticationManagerBean")
-		private AuthenticationManager authenticationManager;
-		
-		/*
-		 * defines the security constraints on the token endpoint
-		 * 
-		 */
-		@Override
-		public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
-			security
-				.passwordEncoder(new PasswordEncoder() {
-					@Override
-					public boolean matches(CharSequence rawPassword, String encodedPassword) {
-						return rawPassword.toString().equals(encodedPassword);
-					}
-					@Override
-					public String encode(CharSequence rawPassword) {
-						return rawPassword.toString();
-					}
-				})
-			    .tokenKeyAccess("permitAll()")
-			    .checkTokenAccess("isAuthenticated()");
-		}
-		
-		/*
-		 * A configurer that defines the client details service. Client details can be initialized, or you can just refer to an existing store.
-		 * 
-		 * (a callback from your AuthorizationServerConfigurer) can be used to define an in-memory or JDBC implementation of the client details service. 
-		 * Important attributes of a client are :clientId, secret, scope, authorizedGrantTypes, authorities
-		 * 
-		 * http://www.baeldung.com/spring-security-oauth-dynamic-client-registration
-		 */
-		@Override
-		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-			clients.inMemory()
-					.withClient("app1")
-					.secret("app1secret")
-					.authorizedGrantTypes("authorization_code")
-					.scopes("user_info")
-					//.autoApprove(true)
-			.and()
-					.withClient("browser")
-					.accessTokenValiditySeconds(10*60) // 10 minutes
-					.refreshTokenValiditySeconds(24*60*60) // 24 hours
-					.authorizedGrantTypes("refresh_token", "password")
-					.scopes("ui")
-			.and()
-					.withClient("account-service")
-					.secret("123")
-					.accessTokenValiditySeconds(10*60) // 10 minutes
-					.refreshTokenValiditySeconds(24*60*60) // 24 hours
-					.authorizedGrantTypes("client_credentials", "refresh_token")
-					.scopes("server");
-		}
-		
-		/*
-		 * defines the authorization and token endpoints and the token services.
-		 * 
-		 */
-		@Override
-		public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-			final TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-			tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
-			
-			endpoints
-					 //.tokenServices(tokenServices()) //enable access token in UUID format 
-					 .tokenStore(tokenStore())
-					 .tokenEnhancer(tokenEnhancerChain)
-					 .authenticationManager(authenticationManager);
-			
-
-		}
-		
-		/*
-		 * add additional info into access token payload.
-		 */
-		@Bean
-	    public TokenEnhancer tokenEnhancer() {
-	        return new CustomTokenEnhancer();
-	    }
-		
-		/*
-		 * override in memory store, using JWT.
-		 */
-		@Bean
-	    public TokenStore tokenStore() {
-	        return new JwtTokenStore(accessTokenConverter());
-	    }
-		
-		/*
-		 * enable JWT function to generate JWT token using asymmetric(public/private key) or symmetric key.
-		 * it allow to customize token payload by setAccessTokenConverter function, default is DefaultAccessTokenConverter
-		 */
-	    @Bean
-	    public JwtAccessTokenConverter accessTokenConverter() {
-	    		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-	        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource(env.getProperty("token.file.path")), env.getProperty("token.file.password").toCharArray());
-			converter.setKeyPair(keyStoreKeyFactory.getKeyPair(env.getProperty("token.file.keypair")));
-            return converter;
-
-	    }
+	@PreAuthorize("hasRole('ROLE_USER') || hasRole('ROLE_ADMIN')")
+	@RequestMapping(method = RequestMethod.GET)
+	public Principal get(Principal principal) {
+		log.info("inside get - start {}", principal.getName());
+		return principal;
 	}
 	
-	@Configuration
-	@EnableResourceServer
-	public static class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
-	 
-	    private static final String RESOURCE_ID = "my_rest_api";
-	     
-	    @Override
-	    public void configure(ResourceServerSecurityConfigurer resources) {
-	        resources.resourceId(RESOURCE_ID).stateless(false);
-	    }
-	 
-	    @Override
-	    public void configure(HttpSecurity http) throws Exception {
-	    	http
-			.requestMatchers().antMatchers("/user/**")
-					.and()
-						.authorizeRequests()
-										.antMatchers(HttpMethod.PUT).permitAll()
-										.anyRequest().authenticated()
-					.and()
-						.exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
-	    }
+	@PutMapping
+	public void create(@RequestBody @Valid User user) {
+		log.info("inside create - start {}", user);
+		authService.create(user);
+		log.info("inside create - start {}");
 	}
-	
 }
 
-----
+--
 
-package com.auth;
+package com.auth.api;
+
+public interface AuthService {
+	public void create(User user);
+}
+
+
+--
+
+
+package com.auth.api;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.auth.api.repo.AuthRepository;
 import com.auth.api.repo.UserCredential;
+import com.auth.client.AccountClient;
 
-@Service
-public class AuthUserDetailService implements UserDetailsService {
-	
-	@Autowired
-	private AuthRepository authRepo;
-	
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserCredential credential = authRepo.findByUsername(username);
-		return credential != null ? User.withUsername(username).password(credential.getPassword()).roles(credential.getRole()).build(): null;
-	}
-
-}
-
---
-package com.auth;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.token.TokenEnhancer;
-
-public class CustomTokenEnhancer implements TokenEnhancer  {
-	@Override
-    public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        final Map<String, Object> additionalInfo = new HashMap<>();
-        additionalInfo.put("organization", authentication.getName() + UUID.randomUUID().toString());
-        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInfo);
-        return accessToken;
-    }
-
-}
---
-package com.auth;
-
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-
-@RestControllerAdvice
-public class AuthGlobalAdvice {
-	
-}
---
-package com.auth.client;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import com.auth.api.User;
-
-import feign.auth.BasicAuthRequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
 
-@FeignClient(name = "account", fallback = AccountClientCallback.class, configuration = AccountClientConfiguration.class)
-public interface AccountClient {
-	@RequestMapping(method = RequestMethod.POST, value = "/account", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	void createUser(User user) throws Exception;
-}
-
 @Slf4j
-@Component
-class AccountClientCallback implements AccountClient {
-
+@Service
+public class AuthServiceImpl implements AuthService {
+	@Autowired
+	private AccountClient accountClient;
+	
+	@Autowired
+	private AuthRepository authRepository;
+	
 	@Override
-	public void createUser(User user) throws Exception {
-		log.error("calling account service issue !");
-		throw new Exception("calling account service issue");
+	@Transactional
+	public void create(User user) {
+		log.info("create user {}", user);
+		try {
+			authRepository
+					.save(UserCredential.builder().username(user.getUsername()).password(user.getPassword()).role("USER").build());
+			
+			accountClient.createUser(user);
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
 	}
-    
+	
 }
 
-@Configuration
-class AccountClientConfiguration  {
-	@Autowired
-	private Environment enviroment;
-	@Bean
-    public BasicAuthRequestInterceptor basicAuthRequestInterceptor() {
-        return new BasicAuthRequestInterceptor(enviroment.getProperty("app.internal.user"), enviroment.getProperty("app.internal.password"));
-    }
+--
+
+package com.auth.api;
+
+import java.util.Date;
+
+import javax.validation.constraints.NotBlank;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Builder
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
+@ToString(exclude="password")
+public class User {
+	@NotBlank
+	private String username;
+	
+	@NotBlank
+	private String password;
+	
+	private String address;
+	
+	private Date dateOfBirth;
 }
