@@ -1,7 +1,2 @@
-#Mon Feb 26 22:52:34 SGT 2018
-connection.gradle.distribution=GRADLE_DISTRIBUTION(LOCAL_INSTALLATION(/Users/linhpham/Documents/Tools/gradle-3.5.1))
-override.workspace.settings=true
-gradle.user.home=
 connection.project.dir=
-offline.mode=false
-build.scans.enabled=false
+eclipse.preferences.version=1

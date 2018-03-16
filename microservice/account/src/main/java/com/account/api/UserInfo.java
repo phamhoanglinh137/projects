@@ -6,12 +6,14 @@ import lombok.Setter;
 
 /**
  * 
- * @author linhpham
+ * @author phamhoanglinh
  *
  */
-@Getter @Setter 
+
 @Builder
+@Getter @Setter
 public class UserInfo {
-	private String userName;
-	private String address;
+	
+	private String username;
+	
 }

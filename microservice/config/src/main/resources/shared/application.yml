@@ -1,7 +1,14 @@
 eureka: 
-  instance:
+  instance: 
     prefer-ip-address: true
   client:
-    service-url:
-      defaultZone: http://localhost:8082/eureka
- 
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER}/eureka/
+## ---------------------
+## -- app properties ---
+## ---------------------
+app: 
+  internal: 
+    user: SERVER
+    password: SERVER_PWD
+    role: SERVER

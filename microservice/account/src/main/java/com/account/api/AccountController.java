@@ -1,22 +1,38 @@
 package com.account.api;
 
-
 import java.security.Principal;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.account.api.repo.User;
+
+import reactor.core.publisher.Mono;
+
 /**
  * 
- * @author linhpham
+ * @author phamhoanglinh
  *
  */
+
 @RestController
-@RequestMapping("/user")
+@RequestMapping(value = "/account")
 public class AccountController {
 	
-	public UserInfo getUserDetail(Principal principal) {
-		return UserInfo.builder().userName(principal.getName()).build();
+	@Autowired
+	private UserService userService;
+
+	@GetMapping
+	public Mono<User> get(Principal principal) {
+		return userService.retrieve(principal.getName());
 	}
 	
+	@PostMapping
+	public void create(@RequestBody User user) {
+		userService.create(user);
+	}
 }

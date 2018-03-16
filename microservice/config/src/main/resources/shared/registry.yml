@@ -1,9 +1,15 @@
-server: 
+server:
   port: 8082
-eureka: 
-  instance: 
+#spring: 
+#  cloud:
+#    config: 
+#      discovery: 
+#        serviceId: config
+#        enabled: true
+eureka:
+  instance:
     prefer-ip-address: true
-  client: 
+  client:
     registerWithEureka: false
     fetchRegistry: false
   server: 

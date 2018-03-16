@@ -5,7 +5,7 @@ spring:
     active: local
   cloud: 
     config: 
-      uri: http://localhost:8081
+      uri: ${CONFIG_SERVER}
       fail-fast: true
       name: ${spring.application.name}
       profile: ${spring.profiles.active}

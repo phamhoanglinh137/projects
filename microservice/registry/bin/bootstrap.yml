@@ -14,5 +14,5 @@ spring:
         max-attempts: 5
         max-interval: 10000
 logging: 
-  config: ${spring.cloud.config.uri}/${spring.application.name}/${spring.cloud.config.profile}/master/log.xml
+  config: ${spring.cloud.config.uri}/${spring.application.name}/${spring.cloud.config.profile}/master/${spring.application.name}_log.xml
   

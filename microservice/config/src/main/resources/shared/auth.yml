@@ -1,15 +1,27 @@
-server: 
+server:
   port: 8083
+spring:
+  h2: 
+    console: 
+      enabled: true
+      path: /h2  
+  datasource: 
+    url: jdbc:h2:file:~/authdb
+    username: sa
+    password: 
+  jpa:
+    show-sql: false
+    hibernate: 
+      ddl-auto: create-drop
+    properties:
+      hibernate: 
+        dialect: org.hibernate.dialect.H2Dialect
+
+## ---------------------
+## -- app properties ---
+## ---------------------
 token: 
   file: 
-    path: mytest.jks
-    password: mypass
+    path: mytest.jks # store in auth module locally coz spring config server not really support binary file, it is causing format file exception during loading keystore by URL
     keypair: mykey
-eureka: 
-  instance: 
-    prefer-ip-address: true
-  client: 
-    registerWithEureka: false
-    fetchRegistry: false
-  server: 
-    waitTimeInMsWhenSyncEmpty: 0
+    password: mypass
