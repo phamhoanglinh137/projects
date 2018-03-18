@@ -1,0 +1,12 @@
+PUT /user HTTP/1.1
+Host: localhost:8083
+Content-Type: application/json
+Cache-Control: no-cache
+Postman-Token: b345e7a3-6d51-b279-71de-b67515118af6
+
+{
+	"username": "linhpham",
+	"password": "pwd",
+	"address": "Changi",
+	"nric" :" G12345678"
+}
