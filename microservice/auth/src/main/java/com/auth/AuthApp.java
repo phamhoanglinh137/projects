@@ -2,8 +2,6 @@ package com.auth;
 
 import java.util.Arrays;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
@@ -50,8 +48,6 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @EnableFeignClients
 @EnableDiscoveryClient //https://stackoverflow.com/questions/31976236/whats-the-differen	ce-between-enableeurekaclient-and-enablediscoveryclient
 public class AuthApp {
-	
-    public static final Logger logger = LoggerFactory.getLogger(AuthApp.class);
 	
 	public static void main(String[] arguments) throws Exception {
 		SpringApplication.run(AuthApp.class, arguments);
