@@ -70,7 +70,7 @@ public class AuthApp {
 		 * there are 3 options:
 		 * - use custom Authentication Provider to do your own authentication.
 		 * - use custom UserDetailService to load by user name using default DaoAuthenticationProvider.
-		 * - use In Memory for testing below
+		 * - use In Memory
 		 */
 		@Override
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
