@@ -169,21 +169,28 @@ public class AuthApp {
 					.withClient("app1")
 					.secret("app1secret")
 					.authorizedGrantTypes("authorization_code")
-					.scopes("user_info")
+					.scopes("client_app")
 					//.autoApprove(true)
 			.and()
 					.withClient("browser")
 					.accessTokenValiditySeconds(10*60) // 10 minutes
 					.refreshTokenValiditySeconds(24*60*60) // 24 hours
-					.authorizedGrantTypes("refresh_token", "password")
+					.authorizedGrantTypes("password", "refresh_token")
 					.scopes("ui")
+			.and()
+					.withClient("app2")
+					.secret("app2secret")
+					.accessTokenValiditySeconds(10*60) // 10 minutes
+					.refreshTokenValiditySeconds(24*60*60) // 24 hours
+					.authorizedGrantTypes("password", "refresh_token")
+					.scopes("client_app")
 			.and()
 					.withClient("account-service")
 					.secret("123")
 					.accessTokenValiditySeconds(10*60) // 10 minutes
 					.refreshTokenValiditySeconds(24*60*60) // 24 hours
 					.authorizedGrantTypes("client_credentials", "refresh_token")
-					.scopes("server");
+					.scopes("resource_server");
 		}
 		
 		/*

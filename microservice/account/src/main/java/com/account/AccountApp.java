@@ -134,7 +134,7 @@ public class AccountApp {
 	    @Bean
 	    public JwtAccessTokenConverter accessTokenConverter() {
 	        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-	        Resource resource = new ClassPathResource("public-jwt");
+	        Resource resource = new ClassPathResource("public-key");
 	        String publicKey = null;
 	        try {
 	            publicKey = IOUtils.toString(resource.getInputStream(), "UTF-8");
