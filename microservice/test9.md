@@ -159,3 +159,97 @@ public class ResourcePasswordAuthenticationProcessingFilter extends OAuth2Client
 	}
 
 }
+-----
+package com.oauth.client.api.account;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/account")
+public class AccountController {
+	
+	@GetMapping
+	@PreAuthorize("isAuthenticated()")
+	public String userDetail(Authentication authentication) {
+		String token =  (String) authentication.getDetails();
+		return token;
+	}
+}
+---
+package com.oauth.client.security;
+
+import java.io.IOException;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.token.RemoteTokenServices;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * post login filter and make sure all request with valid token.
+ * It will populate principal after token is validated in auth server. 
+ * 
+ * @author phamhoanglinh
+ *
+ */
+@Setter @Getter
+public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+	
+	private RemoteTokenServices remoteTokenServices;
+
+	public AuthenticationFilter(RequestMatcher requiresAuthenticationRequestMatcher) {
+		super(requiresAuthenticationRequestMatcher);
+	}
+
+	@Override
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+			throws AuthenticationException, IOException, ServletException {
+		String token = request.getHeader("token");
+		OAuth2Authentication oAuth2Authentication = remoteTokenServices.loadAuthentication(token);
+		oAuth2Authentication.setDetails(token);
+		return oAuth2Authentication;
+	}
+	
+	@Override
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+			Authentication authResult) throws IOException, ServletException {
+		SecurityContextHolder.getContext().setAuthentication(authResult);
+		chain.doFilter(request, response); // continue Chain after Successful Authentication
+	}
+}
+--
+package com.oauth.client.api.login;
+
+import java.security.Principal;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/login")
+public class LoginController {
+	
+	@PostMapping("/auth")
+	@PreAuthorize("hasAnyRole('ROLE_USER')")
+	public Principal accesstoken(Principal principal) {
+		return principal;
+	}
+	
+}
