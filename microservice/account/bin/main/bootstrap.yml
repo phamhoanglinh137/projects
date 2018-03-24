@@ -1,0 +1,18 @@
+spring: 
+  application: 
+    name: account
+  profiles: 
+    active: local
+  cloud: 
+    config: 
+      uri: ${CONFIG_SERVER}
+      fail-fast: true
+      name: ${spring.application.name}
+      profile: ${spring.profiles.active}
+      retry:
+        initial-interval: 50000
+        max-attempts: 5
+        max-interval: 10000
+logging: 
+  config: ${spring.cloud.config.uri}/${spring.application.name}/${spring.cloud.config.profile}/master/log.xml
+  
