@@ -1,0 +1,12 @@
+server: 
+  port: 8092
+app:  
+  client: 
+    clientId: app2
+    clientSecret: app2secret
+    accessTokenUri: http://localhost:8083/oauth/token
+    checkTokenUri: http://localhost:8083/oauth/check_token
+    userInfoUri: http://localhost:8084/account
+logging:
+  level:
+    root: INFO
