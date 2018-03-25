@@ -1,7 +1,7 @@
 
 ### Summary
 
-Using Spring integration to call external services http://www.webservicex.net/globalweather.asmx/ by SOAP and REST
+Using Spring integration to call external services https://openweathermap.org/api by SOAP and REST
 and send data using activemq
 
 ### Tech stacks
