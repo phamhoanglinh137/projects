@@ -1,0 +1,8 @@
+http: 
+  appid: b6907d289e10d714a6e88b30761fae22
+  uri:
+    city: http://samples.openweathermap.org/data/2.5/weather?appid=${http.appid}&q={city}
+jms: 
+  queue: 
+    in: MOCKRUNNER-IN-QUEUE
+    out: MOCKRUNNER-OUT-QUEUE

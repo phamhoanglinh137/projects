@@ -1,0 +1,60 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.weather'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+eclipse {
+    project {
+        name = 'integration'
+    }
+}
+
+repositories {
+	mavenCentral()
+	maven { url "https://repo.spring.io/milestone" }
+}
+
+
+ext {
+	springCloudVersion = 'Finchley.M8'
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-integration')
+	compile('org.springframework.integration:spring-integration-http') 
+	compile('org.springframework.integration:spring-integration-ws')
+	compile('org.springframework.integration:spring-integration-xml')
+	compile('org.springframework.integration:spring-integration-jms')
+	compile('org.springframework.integration:spring-integration-mail')
+	compile("org.springframework:spring-jms")
+	
+	compile("com.mockrunner:mockrunner-jms:1.1.2")
+	compile("org.glassfish.main.javaee-api:javax.jms:3.1.2.2")
+	
+	compile("com.squareup.okhttp3:okhttp:3.10.0")
+	compile "org.projectlombok:lombok:1.16.20"
+	
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
