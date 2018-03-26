@@ -3,8 +3,8 @@
 
 ####  1. MicroService
   * samples using spring cloud, spring boot, apache kafka and ELK, docker.
-####  2. weather
-  * spring integration call external service using SOAP/REST and send MQ using activemq
+####  2. integration
+  * spring integration call external service using SOAP/REST/JMS/AMQP/EMAIL
 ####  3. sp_group
   * sample using RestfulApi, spring boot, mysql and docker
 #### 4. spring_cloud_aws
