@@ -71,7 +71,7 @@ public class Config {
 	// -- SOAP --
 	@Bean
 	@ServiceActivator(inputChannel = "addSoapChannel")
-	public MessageHandler soapChannelHandler() {
+	public MessageHandler addChannelHandler() {
 		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
 		marshaller.setContextPath("com.integration.soap.obj");
 
@@ -98,7 +98,10 @@ public class Config {
 		return IntegrationFlows.from("addSoapChannel")
 				.<String, Add>transform(payload -> Add.builder().intA(Integer.parseInt(payload.split(":")[0]))
 						.intB(Integer.parseInt(payload.split(":")[1])).build())
-				.handle(soapChannelHandler()).transform(Transformers.toJson())
+				.handle(addChannelHandler())
+				.transform(Transformers.toJson())
 				.transform("#jsonPath(payload, '$.addResult')").get();
 	}
+	
+	// -- EMAIL -- 
 }
