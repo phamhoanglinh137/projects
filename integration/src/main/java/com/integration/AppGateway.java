@@ -17,4 +17,7 @@ public interface AppGateway {
 	@Gateway(requestChannel="outboundJMSChannel")
 	public Person getPersonInfo(@Payload String msg);
 	
+	@Gateway(requestChannel="addSoapChannel", payloadExpression = "#args[0] + ':' + #args[1]")
+	public Integer add(Integer num1, Integer num2);
+	
 }

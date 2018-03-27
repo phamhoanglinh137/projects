@@ -46,6 +46,7 @@ dependencies {
 	
 	compile("com.mockrunner:mockrunner-jms:1.1.2")
 	compile("org.glassfish.main.javaee-api:javax.jms:3.1.2.2")
+	compile("com.fasterxml.jackson.core:jackson-databind:2.9.4")
 	
 	compile("com.squareup.okhttp3:okhttp:3.10.0")
 	compile "org.projectlombok:lombok:1.16.20"

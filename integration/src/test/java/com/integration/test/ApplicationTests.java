@@ -35,4 +35,9 @@ public class ApplicationTests {
 		Assert.assertNotNull("send JMS outbound gateway failed", gateway.getPersonInfo(nric));
 		Assert.assertEquals("NRIC retured is not expected",nric, gateway.getPersonInfo(nric).getNric());
 	}
+	
+	@Test
+	public void testAddBySoap() {
+		Assert.assertEquals("Add Opertion is failed", (long)300, (long)gateway.add(100, 200));
+	}
 }

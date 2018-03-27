@@ -6,3 +6,7 @@ jms:
   queue: 
     in: MOCKRUNNER-IN-QUEUE
     out: MOCKRUNNER-OUT-QUEUE
+soap: 
+  add: 
+    uri: http://www.dneonline.com/calculator.asmx
+    action: http://tempuri.org/Add
