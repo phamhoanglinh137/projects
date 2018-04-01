@@ -1,5 +1,6 @@
 package com.integration;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.jms.ConnectionFactory;
@@ -8,13 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.Transformers;
+import org.springframework.integration.handler.LoggingHandler.Level;
 import org.springframework.integration.http.dsl.Http;
+import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.integration.jms.dsl.Jms;
+import org.springframework.integration.mapping.HeaderMapper;
 import org.springframework.integration.ws.DefaultSoapHeaderMapper;
 import org.springframework.integration.ws.MarshallingWebServiceOutboundGateway;
 import org.springframework.jms.support.converter.SimpleMessageConverter;
@@ -48,6 +55,37 @@ public class Config {
 						.uriVariablesFunction(p -> ((Map<String, String>) p.getPayload()))
 						.expectedResponseType(String.class)
 						.get())
+				.get();
+	}
+	
+	
+	@Bean
+	public ExpressionParser parser() {
+	    return new SpelExpressionParser();
+	}
+
+	@Bean
+	public HeaderMapper<HttpHeaders> headerMapper() {
+	    return new DefaultHttpHeaderMapper();
+	}
+
+	@Bean
+	public IntegrationFlow citynameInBound() {
+		return IntegrationFlows
+				.from(Http.inboundGateway("/city/{city}")
+							.headerMapper(headerMapper())
+							.requestMapping(request -> request.consumes("application/json")
+													.produces("application/json")
+													.methods(HttpMethod.GET))
+							.payloadExpression("#pathVariables.city")
+							.requestTimeout(10*1000)
+							.replyTimeout(10*1000))
+				.log(Level.INFO, "payload", m -> m.getPayload().toString())
+				.<String, Map<String, String>>transform(h -> {		
+							Map<String, String> maps = new HashMap<String, String>();
+							maps.put("city", h);
+							return maps; })
+				.channel("cityNameChannel")
 				.get();
 	}
 	

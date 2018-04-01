@@ -43,6 +43,7 @@ dependencies {
 	compile('org.springframework.integration:spring-integration-jms')
 	compile('org.springframework.integration:spring-integration-mail')
 	compile("org.springframework:spring-jms")
+	compile('org.springframework.boot:spring-boot-starter-web')
 	
 	compile("com.mockrunner:mockrunner-jms:1.1.2")
 	compile("org.glassfish.main.javaee-api:javax.jms:3.1.2.2")
