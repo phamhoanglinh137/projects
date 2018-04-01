@@ -13,3 +13,14 @@
 
 ####  Hyperledger > < Ethereum
 https://medium.com/quillhash/ethereum-or-hyperledger-fabric-259f3c9b8da6
+
+
+### Hyperledger
+
+https://developer.ibm.com/courses/all/blockchain-essentials/?course=begin#8647
+
+4 mains core requirements
+- shared ledger
+- smart contract
+- privacy
+- trust
