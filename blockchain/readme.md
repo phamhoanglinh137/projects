@@ -13,11 +13,12 @@
 
 ####  Hyperledger > < Ethereum
 https://medium.com/quillhash/ethereum-or-hyperledger-fabric-259f3c9b8da6
-
+https://www.edureka.co/blog/hyperledger-vs-ethereum/
 
 ### Hyperledger
 
 https://developer.ibm.com/courses/all/blockchain-essentials/?course=begin#8647
+https://www.edureka.co/blog/what-is-hyperledger/
 
 4 mains core requirements
 - shared ledger
