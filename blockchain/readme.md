@@ -17,8 +17,8 @@
 
 ### Hyperledger
 
-https://developer.ibm.com/courses/all/blockchain-essentials/?course=begin#8647
-https://www.edureka.co/blog/what-is-hyperledger/
+- https://developer.ibm.com/courses/all/blockchain-essentials/?course=begin#8647
+- https://www.edureka.co/blog/what-is-hyperledger/
 
 4 mains core requirements
 - shared ledger
