@@ -19,14 +19,15 @@ import java.util.stream.IntStream;
  * Main intermediate functions: 
  * - filter 
  * - map 
- * - sort 
+ * - sort (stateful)
  * - peek
- * - distinct 
+ * - distinct (stateful) 
  * - flatmap
  * 
  * Main terminal
  * - reduce
  * - collect
+ *
  * 
  * @author linhpham
  *

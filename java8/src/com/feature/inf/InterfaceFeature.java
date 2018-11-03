@@ -4,15 +4,19 @@ package com.feature.inf;
  * 
  * @author linhpham
  * 
+ * https://www.journaldev.com/2752/java-8-interface-changes-static-method-default-method
+ * 
  * Interface in java2 has 2 new features
  * 
- * - Default method 
+ * - Default methods 
  *  + low priority than same method in extend class. 
  *  + sub class must define method if it inherits same method in multiple interfaces.
  *  
- * - Static method
+ * - Static methods
+ *  + scope is in interface only.
+ *  + implementation class could not override static methods.mc
  * 
- * - same method in Object class will be hidden.
+ * - same methods with Object class will be hidden.
  *
  */
 public class InterfaceFeature {
@@ -28,7 +32,6 @@ public class InterfaceFeature {
 		
 		System.out.println("-- static method in interface A --");
 		A.showtClassName();
-		
 	}
 }
 
