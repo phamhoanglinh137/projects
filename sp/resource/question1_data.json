@@ -1,0 +1,46 @@
+{
+	"plans": [
+		{
+			"name": "P1",
+			"cost": 11,
+			"features": [
+				"F1",
+				"F2"
+			]
+		},
+		{
+			"name": "P2",
+			"cost": 12,
+			"features": [
+				"F2",
+				"F3"
+			]
+		},
+		{
+			"name": "P3",
+			"cost": 9,
+			"features": [
+				"F1",
+				"F5"
+			]
+		},
+		{
+			"name": "P4",
+			"cost": 9,
+			"features": [
+				"F1",
+				"F2",
+				"F4"
+			]
+		},
+		{
+			"name": "P5",
+			"cost": 10,
+			"features": [
+				"F1",
+				"F2",
+				"F6"
+			]
+		}
+	]
+}
