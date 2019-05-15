@@ -1,5 +1,6 @@
 
 ** This program is running on JDK 8 **
+Download sp.zip and extract to local as java project and run.
 
 ## Question 1
 
